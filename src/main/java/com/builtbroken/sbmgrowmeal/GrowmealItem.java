@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class GrowmealItem
 extends Item {
-	public static int tries = 1000;
 
     public GrowmealItem(Item.Settings settings) {
         super(settings);
@@ -37,7 +36,7 @@ extends Item {
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(context.getSide());
-        if (BoneMealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
+        if (GrowmealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
             if (!world.isClient) {
                 world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos, 0);
             }
@@ -45,7 +44,7 @@ extends Item {
         }
         BlockState blockState = world.getBlockState(blockPos);
         boolean bl = blockState.isSideSolidFullSquare(world, blockPos, context.getSide());
-        if (bl && BoneMealItem.useOnGround(context.getStack(), world, blockPos2, context.getSide())) {
+        if (bl && GrowmealItem.useOnGround(context.getStack(), world, blockPos2, context.getSide())) {
             if (!world.isClient) {
                 world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos2, 0);
             }
@@ -58,11 +57,12 @@ extends Item {
         Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)((Object)blockState.getBlock())).isFertilizable(world, pos, blockState, world.isClient)) {
-            if (world instanceof ServerWorld) {
-                if (fertilizable.canGrow(world, world.random, pos, blockState)) {
-                    fertilizable.grow((ServerWorld)world, world.random, pos, blockState);
+            for(int i = 0;i < 1000; i++) {
+                if (world instanceof ServerWorld) {
+                    if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+                        fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
+                    }
                 }
-                stack.decrement(1);
             }
             return true;
         }
