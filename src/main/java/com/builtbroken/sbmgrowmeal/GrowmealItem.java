@@ -5,9 +5,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DeadCoralWallFanBlock;
 import net.minecraft.block.Fertilizable;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BiomeTags;
@@ -18,12 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 public class GrowmealItem
 extends Item {
+	public static int tries = 1000;
 
     public GrowmealItem(Item.Settings settings) {
         super(settings);
@@ -35,20 +39,21 @@ extends Item {
         BlockPos blockPos = context.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(context.getSide());
         boolean isGrown = false;
-        for(int i = 0; i < 1000; i++) {
-            if (GrowmealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
-                if (!world.isClient) {
-                    world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos, 0);
-                    isGrown = true;
-                }
-            } else {
-                break;
-            }
+        for(int i = 0; i < tries; i++) {
+        	if (GrowmealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
+//        		GrowmealFabric.LOGGER.info("using on plant " + i + " " + Boolean.toString(isGrown));
+        		if (!world.isClient) {
+        			world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos, 0);
+        			isGrown = true;
+        		}
+        	} else {
+        		break;
+        	}
         }
         if(isGrown) return ActionResult.success(world.isClient);
         BlockState blockState = world.getBlockState(blockPos);
         boolean bl = blockState.isSideSolidFullSquare(world, blockPos, context.getSide());
-        if (bl && GrowmealItem.useOnGround(context.getStack(), world, blockPos2, context.getSide())) {
+        if (bl && BoneMealItem.useOnGround(context.getStack(), world, blockPos2, context.getSide())) {
             if (!world.isClient) {
                 world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos2, 0);
             }
@@ -60,14 +65,15 @@ extends Item {
     public static boolean useOnFertilizable(ItemStack stack, World world, BlockPos pos) {
         Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)(blockState.getBlock())).isFertilizable(world, pos, blockState, world.isClient)) {
-            for(int i = 0;i < 1000; i++) {
-                if (world instanceof ServerWorld) {
-                    if (fertilizable.canGrow(world, world.random, pos, blockState)) {
-                        fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
-                    }
-                }
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)((Object)blockState.getBlock())).isFertilizable(world, pos, blockState, world.isClient)) {
+            if (world instanceof ServerWorld) {
+            		if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+//            			GrowmealFabric.LOGGER.info("Looping " + i);
+            			fertilizable.grow((ServerWorld)world, world.random, pos, blockState);
+            		}
+                stack.decrement(1);
             }
+//        	GrowmealFabric.LOGGER.info("used on plant");
             return true;
         }
         return false;
@@ -116,5 +122,41 @@ extends Item {
         return true;
     }
 
+    public static void createParticles(WorldAccess world, BlockPos pos, int count) {
+        double e;
+        BlockState blockState;
+        if (count == 0) {
+            count = 15;
+        }
+        if ((blockState = world.getBlockState(pos)).isAir()) {
+            return;
+        }
+        double d = 0.5;
+        if (blockState.isOf(Blocks.WATER)) {
+            count *= 3;
+            e = 1.0;
+            d = 3.0;
+        } else if (blockState.isOpaqueFullCube(world, pos)) {
+            pos = pos.up();
+            count *= 3;
+            d = 3.0;
+            e = 1.0;
+        } else {
+            e = blockState.getOutlineShape(world, pos).getMax(Direction.Axis.Y);
+        }
+        world.addParticle(ParticleTypes.HAPPY_VILLAGER, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+        Random random = world.getRandom();
+        for (int i = 0; i < count; ++i) {
+            double m;
+            double l;
+            double f = random.nextGaussian() * 0.02;
+            double g = random.nextGaussian() * 0.02;
+            double h = random.nextGaussian() * 0.02;
+            double j = 0.5 - d;
+            double k = (double)pos.getX() + j + random.nextDouble() * d * 2.0;
+            if (world.getBlockState(BlockPos.ofFloored(k, l = (double)pos.getY() + random.nextDouble() * e, m = (double)pos.getZ() + j + random.nextDouble() * d * 2.0).down()).isAir()) continue;
+            world.addParticle(ParticleTypes.HAPPY_VILLAGER, k, l, m, f, g, h);
+        }
+    }
 }
 
