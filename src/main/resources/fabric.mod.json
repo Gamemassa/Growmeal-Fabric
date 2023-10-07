@@ -12,7 +12,7 @@
 		"sources": "https://github.com/Gamemassa/Growmeal-Fabric"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/growmeal-fabric/growmeal.png",
+	"icon": "assets/sbmgrowmeal/growmeal.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
