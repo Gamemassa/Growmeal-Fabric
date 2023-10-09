@@ -2,14 +2,11 @@
 
 Unofficial Fabric Port of bl4ckscor3's Growmeal mod.
 
-Download from Modrinth
-https://modrinth.com/mod/growmeal-(fabric)
-.
-.
-.
-.
+Download from 
+- Modrinth - https://modrinth.com/mod/growmeal-(fabric)
+
 bl4ckscor3's original Forge version:
 
-CurseForge - https://www.curseforge.com/minecraft/mc-mods/growmeal
+- CurseForge - https://www.curseforge.com/minecraft/mc-mods/growmeal
 
-Modrinth - https://modrinth.com/mod/growmeal
+- Modrinth - https://modrinth.com/mod/growmeal
