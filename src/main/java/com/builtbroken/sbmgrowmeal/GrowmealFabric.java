@@ -16,7 +16,8 @@ public class GrowmealFabric implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     // public static final Logger LOGGER = LoggerFactory.getLogger("growmeal-fabric");
 
-	public static final Item GROWMEAL = new GrowmealItem(new FabricItemSettings());
+	public static final Item GROWMEAL = Registry.register(Registries.ITEM, new Identifier("sbmgrowmeal", "growmeal"), new GrowmealItem(new FabricItemSettings()));
+	//public static final Item GROWMEAL = new GrowmealItem(new FabricItemSettings());
 
 	@Override
 	public void onInitialize() {
@@ -26,7 +27,7 @@ public class GrowmealFabric implements ModInitializer {
 
 		// LOGGER.info("Hello Fabric world!");
 		
-		Registry.register(Registries.ITEM, new Identifier("sbmgrowmeal", "growmeal"), GROWMEAL);
+		//Registry.register(Registries.ITEM, new Identifier("sbmgrowmeal", "growmeal"), GROWMEAL);
 		
 	}
 }
