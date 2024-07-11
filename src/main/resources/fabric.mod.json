@@ -5,7 +5,8 @@
 	"name": "Growmeal-Fabric",
 	"description": "Unofficial Fabric Port of bl4ckscor3's Growmeal Mod",
 	"authors": [
-		"Gamemassa"
+		"Gamemassa",
+		"Scillman"
 	],
 	"contact": {
 		"homepage": "https://github.com/Gamemassa/Growmeal-Fabric",
