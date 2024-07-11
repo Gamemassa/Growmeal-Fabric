@@ -51,7 +51,7 @@ extends Item {
 
     public static boolean useOnFertilizable(ItemStack stack, World world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable fertilizable && fertilizable.isFertilizable(world, pos, blockState)) {
+        if (blockState.getBlock() instanceof Fertilizable fertilizable && fertilizable.isFertilizable(world, pos, blockState, world.isClient)) {
             if (world instanceof ServerWorld) {
             		if (fertilizable.canGrow(world, world.random, pos, blockState)) {
 //            			GrowmealFabric.LOGGER.info("Looping " + i);
@@ -145,4 +145,3 @@ extends Item {
         }
     } */
 }
-
