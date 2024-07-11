@@ -1,5 +1,7 @@
 package com.builtbroken.sbmgrowmeal;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,7 +25,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
-import org.jetbrains.annotations.Nullable;
 
 public class GrowmealItem
 extends Item {
@@ -65,7 +66,7 @@ extends Item {
     public static boolean useOnFertilizable(ItemStack stack, World world, BlockPos pos) {
         Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)((Object)blockState.getBlock())).isFertilizable(world, pos, blockState, world.isClient)) {
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)((Object)blockState.getBlock())).isFertilizable(world, pos, blockState)) {
             if (world instanceof ServerWorld) {
             		if (fertilizable.canGrow(world, world.random, pos, blockState)) {
 //            			GrowmealFabric.LOGGER.info("Looping " + i);
@@ -159,4 +160,3 @@ extends Item {
         }
     }
 }
-
