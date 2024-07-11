@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "b b",
-    " b ",
-    "b b"
-  ],
+  "category": "misc",
+  "group": "bonemeal",
   "key": {
     "b": {
       "item": "minecraft:bone_meal"
     }
   },
+  "pattern": [
+    "b b",
+    " b ",
+    "b b"
+  ],
   "result": {
+    "count": 1,
     "item": "sbmgrowmeal:growmeal"
   }
 }
