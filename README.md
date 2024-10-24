@@ -1,4 +1,4 @@
-![Growmeal-Fabric](https://github.com/Gamemassa/Growmeal-Fabric/actions/workflows/build.yml/badge.svg?branch=1.21.3&event=push)
+![Growmeal-Fabric](https://github.com/Gamemassa/Growmeal-Fabric/actions/workflows/build.yml/badge.svg?branch=main&event=push)
 
 # Growmeal-Fabric
 
