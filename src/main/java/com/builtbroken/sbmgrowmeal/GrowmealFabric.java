@@ -14,18 +14,15 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
 public class GrowmealFabric implements ModInitializer {
-
     public static final String MOD_ID = "sbmgrowmeal";
     public static final String MOD_NAME = "SBM Growmeal";
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-    public static final Item GROWMEAL = register("growmeal", GrowmealItem::new);
+    public static final GrowmealItem GROWMEAL = register("growmeal", GrowmealItem::new);
 
     @Override
-    public void onInitialize() {
-
-    }
+    public void onInitialize() {}
 
     private static <T extends Item> T register(String id, Function<Item.Settings, T> factory) {
         Identifier guid = Identifier.of(MOD_ID, id);
