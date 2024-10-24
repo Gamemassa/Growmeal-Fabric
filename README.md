@@ -1,3 +1,5 @@
+![Growmeal-Fabric](https://github.com/Gamemassa/Growmeal-Fabric/actions/workflows/build.yml/badge.svg?branch=1.21.3&event=push)
+
 # Growmeal-Fabric
 
 Unofficial Fabric Port of bl4ckscor3's [Growmeal](https://github.com/bl4ckscor3/Growmeal) mod.

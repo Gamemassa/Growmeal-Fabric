@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "bonemeal",
   "key": {
-    "b": {
-      "item": "minecraft:bone_meal"
-    }
+    "b": "minecraft:bone_meal"
   },
   "pattern": [
     "b b",

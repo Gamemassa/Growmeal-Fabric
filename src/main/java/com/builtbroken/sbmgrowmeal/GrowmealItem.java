@@ -26,9 +26,13 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 
-public class GrowmealItem
-extends Item {
-	public static int tries = 1000;
+/**
+ * @see {@link net.minecraft.item.BoneMealItem BoneMealItem}
+ * @see {@link net.minecraft.block.SaplingBlock SaplingBlock}
+ * @see {@link net.minecraft.block.CropBlock CropBlock}
+ */
+public class GrowmealItem extends Item {
+    public static int tries = 1000;
 
     public GrowmealItem(Item.Settings settings) {
         super(settings);
@@ -41,40 +45,42 @@ extends Item {
         BlockPos blockPos2 = blockPos.offset(context.getSide());
         boolean isGrown = false;
         for(int i = 0; i < tries; i++) {
-        	if (GrowmealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
-//        		GrowmealFabric.LOGGER.info("using on plant " + i + " " + Boolean.toString(isGrown));
-        		if (!world.isClient) {
-        			world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos, 0);
-        			isGrown = true;
-        		}
-        	} else {
-        		break;
-        	}
+            if (GrowmealItem.useOnFertilizable(context.getStack(), world, blockPos)) {
+//                GrowmealFabric.LOGGER.info("using on plant " + i + " " + Boolean.toString(isGrown));
+                if (!world.isClient) {
+                    world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos, 0);
+                    isGrown = true;
+                }
+            } else {
+                break;
+            }
         }
-        if(isGrown) return ActionResult.success(world.isClient);
+
+        if (isGrown)
+            return ActionResult.SUCCESS; // ActionResult.success(world.isClient);
+
         BlockState blockState = world.getBlockState(blockPos);
         boolean bl = blockState.isSideSolidFullSquare(world, blockPos, context.getSide());
         if (bl && BoneMealItem.useOnGround(context.getStack(), world, blockPos2, context.getSide())) {
             if (!world.isClient) {
                 world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, blockPos2, 0);
             }
-            return ActionResult.success(world.isClient);
+            return ActionResult.SUCCESS; // ActionResult.success(world.isClient);
         }
         return ActionResult.PASS;
     }
 
     public static boolean useOnFertilizable(ItemStack stack, World world, BlockPos pos) {
-        Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable)((Object)blockState.getBlock())).isFertilizable(world, pos, blockState)) {
+        if (blockState.getBlock() instanceof Fertilizable fertilizable && fertilizable.isFertilizable(world, pos, blockState)) {
             if (world instanceof ServerWorld) {
-            		if (fertilizable.canGrow(world, world.random, pos, blockState)) {
-//            			GrowmealFabric.LOGGER.info("Looping " + i);
-            			fertilizable.grow((ServerWorld)world, world.random, pos, blockState);
-            		}
+                if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+//                    GrowmealFabric.LOGGER.info("Looping " + i);
+                    fertilizable.grow((ServerWorld)world, world.random, pos, blockState);
+                }
                 stack.decrement(1);
             }
-//        	GrowmealFabric.LOGGER.info("used on plant");
+//            GrowmealFabric.LOGGER.info("used on plant");
             return true;
         }
         return false;
@@ -97,12 +103,27 @@ extends Item {
             RegistryEntry<Biome> registryEntry = world.getBiome(blockPos2);
             if (registryEntry.isIn(BiomeTags.PRODUCES_CORALS_FROM_BONEMEAL)) {
                 if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
-                    blockState = Registries.BLOCK.getEntryList(BlockTags.WALL_CORALS).flatMap(blocks -> blocks.getRandom(world.random)).map(blockEntry -> ((Block)blockEntry.value()).getDefaultState()).orElse(blockState);
+                    blockState = Registries.BLOCK
+                        .getRandomEntry(BlockTags.WALL_CORALS, world.random)
+                        .map(blockEntry -> blockEntry.value().getDefaultState())
+                        .orElse(blockState);
+                    // blockState = Registries.BLOCK
+                    //     .getEntryList(BlockTags.WALL_CORALS)
+                    //     .flatMap(blocks -> blocks.getRandom(world.random)).map(blockEntry -> ((Block)blockEntry.value()).getDefaultState())
+                    //     .orElse(blockState);
                     if (blockState.contains(DeadCoralWallFanBlock.FACING)) {
                         blockState = (BlockState)blockState.with(DeadCoralWallFanBlock.FACING, facing);
                     }
                 } else if (random.nextInt(4) == 0) {
-                    blockState = Registries.BLOCK.getEntryList(BlockTags.UNDERWATER_BONEMEALS).flatMap(blocks -> blocks.getRandom(world.random)).map(blockEntry -> ((Block)blockEntry.value()).getDefaultState()).orElse(blockState);
+                    blockState = Registries.BLOCK
+                        .getRandomEntry(BlockTags.UNDERWATER_BONEMEALS, world.random)
+                        .map(blockEntry -> blockEntry.value().getDefaultState())
+                        .orElse(blockState);
+                    // blockState = Registries.BLOCK
+                    //     .getEntryList(BlockTags.UNDERWATER_BONEMEALS)
+                    //     .flatMap(blocks -> blocks.getRandom(world.random))
+                    //     .map(blockEntry -> ((Block)blockEntry.value()).getDefaultState())
+                    //     .orElse(blockState);
                 }
             }
             if (blockState.isIn(BlockTags.WALL_CORALS, state -> state.contains(DeadCoralWallFanBlock.FACING))) {
@@ -137,7 +158,7 @@ extends Item {
             count *= 3;
             e = 1.0;
             d = 3.0;
-        } else if (blockState.isOpaqueFullCube(world, pos)) {
+        } else if (blockState.isOpaqueFullCube()) {
             pos = pos.up();
             count *= 3;
             d = 3.0;

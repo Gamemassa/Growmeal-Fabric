@@ -1,29 +1,29 @@
 {
-	"schemaVersion": 1,
-	"id": "growmeal-fabric",
-	"version": "${version}",
-	"name": "Growmeal-Fabric",
-	"description": "Unofficial Fabric Port of bl4ckscor3's Growmeal Mod",
-	"authors": [
-		"Gamemassa",
-		"Scillman"
-	],
-	"contact": {
-		"homepage": "https://github.com/Gamemassa/Growmeal-Fabric",
-		"sources": "https://github.com/Gamemassa/Growmeal-Fabric"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/sbmgrowmeal/growmeal.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.builtbroken.sbmgrowmeal.GrowmealFabric"
-		]
-	},
-	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.21",
-		"java": ">=21",
-		"fabric-api": "*"
-	}
+    "schemaVersion": 1,
+    "id": "growmeal-fabric",
+    "version": "${version}",
+    "name": "Growmeal-Fabric",
+    "description": "Unofficial Fabric Port of bl4ckscor3's Growmeal Mod",
+    "authors": [
+        "Gamemassa",
+        "Scillman"
+    ],
+    "contact": {
+        "homepage": "https://github.com/Gamemassa/Growmeal-Fabric",
+        "sources": "https://github.com/Gamemassa/Growmeal-Fabric"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/sbmgrowmeal/growmeal.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.builtbroken.sbmgrowmeal.GrowmealFabric"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=0.16.7",
+        "minecraft": "~1.21.3",
+        "java": ">=21",
+        "fabric-api": "*"
+    }
 }
